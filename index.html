@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Encrypt/Decrypt Messages</title>
+  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.0.0/crypto-js.min.js"></script>
+</head>
+
+<body>
+
+  <body style="background-color: lightgrey;">
+    <center>
+      <h1>Encrypt/Decrypt Messages</h1>
+      <form>
+        <label for="algorithm">Select an encryption algorithm:</label><br>
+        <select id="algorithm">
+          <option value="AES">AES</option>
+          <option value="Rabbit">Rabbit</option>
+          <option value="TripleDES">TripleDES</option>
+        </select><br>
+        <label for="password">Enter a password:</label><br>
+        <input type="password" id="password"><br>
+        <h3>Enter a message:</h3>
+        <textarea id="message" rows="8" cols="100"></textarea><br>
+        <button type="button" onclick="pasteFromClipboard()">Paste</button><br>
+      </form><br>
+      <button type="button" onclick="encryptMessage()">Encrypt</button>
+      <button type="button" onclick="decryptMessage()">Decrypt</button><br>
+      <h3>Encrypted/Decrypted Message:</h3>
+      <form>
+        <textarea id="result" rows="8" cols="100"></textarea><br>
+        <button type="button" onclick="copyToClipboard()">Copy</button><br>
+        <form>
+    </center>
+    <script>
+      function encryptMessage() {
+        // Get the message, password, and selected algorithm from the form
+        var message = document.getElementById('message').value;
+        var password = document.getElementById('password').value;
+        var algorithm = document.getElementById('algorithm').value;
+
+        // Encrypt the message using the password and selected algorithm
+        var encrypted = CryptoJS[algorithm].encrypt(message, password);
+
+        // Show the encrypted message in the result element
+        document.getElementById('result').innerHTML = encrypted;
+      }
+
+      function decryptMessage() {
+        // Get the encrypted message, password, and selected algorithm from the form
+        var encrypted = document.getElementById('message').value;
+        var password = document.getElementById('password').value;
+        var algorithm = document.getElementById('algorithm').value;
+
+        // Decrypt the message using the password and selected algorithm
+        var decrypted = CryptoJS[algorithm].decrypt(encrypted, password);
+
+        // Show the decrypted message in the result element
+        document.getElementById('result').innerHTML = decrypted.toString(CryptoJS.enc.Utf8);
+      }
+
+      function copyToClipboard() {
+        var textarea = document.getElementById('result');
+        textarea.select();
+        document.execCommand('copy');
+      }
+
+
+      function pasteFromClipboard() {
+        // Get the "message" textarea element
+        var messageInput = document.getElementById("message");
+
+        // Check if the browser supports the clipboard API
+        if (navigator.clipboard) {
+          // Get the clipboard text
+          navigator.clipboard.readText().then(function (text) {
+            // Set the clipboard text as the value of the "message" textarea
+            messageInput.value = text;
+          });
+        } else {
+          // If the clipboard API is not supported, show an error message
+          alert("Your browser does not support the clipboard API!");
+        }
+      }
+    </script>
+  </body>
+
+</html>
